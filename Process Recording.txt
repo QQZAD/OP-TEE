@@ -71,15 +71,14 @@ rm -rf /media/rootfs/boot/*
 cd .. && umount rootfs
 
 【7】实现Raspberry Pi和电脑间的串口通信
-USB TO TTL串口模块的TXD通过杜邦线连接Raspberry Pi主板GPIO的RXD
-USB TO TTL串口模块的RXD通过杜邦线连接Raspberry Pi主板GPIO的TXD
-USB TO TTL串口模块的GND通过杜邦线连接Raspberry Pi主板GPIO的GND
-https://www.raspberrypi.org/documentation/usage/gpio/README.md
-使用Raspberry Pi上的microUSB供电
-USB TO TTL串口模块的USB端连接电脑
+# USB TO TTL串口模块的TXD通过杜邦线连接Raspberry Pi主板GPIO的RXD
+# USB TO TTL串口模块的RXD通过杜邦线连接Raspberry Pi主板GPIO的TXD
+# USB TO TTL串口模块的GND通过杜邦线连接Raspberry Pi主板GPIO的GND
+# https://www.raspberrypi.org/documentation/usage/gpio/README.md
+# 使用Raspberry Pi上的microUSB供电
+# USB TO TTL串口模块的USB端连接电脑
 sudo apt-get install picocom -y
 sudo picocom -b 115200 /dev/ttyUSB0
-打开Raspberry Pi电源，通过串口调试可以看到系统启动的信息
+# 打开Raspberry Pi电源，通过串口调试可以看到系统和可信固件的启动信息
 
 【8】Run xtest
-
