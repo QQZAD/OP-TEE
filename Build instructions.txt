@@ -51,3 +51,23 @@ make -j `nproc` # 注意：该命令需要高速稳定的VPN或VPS，在交叉�
 # 在Ubuntu18.04中遇到问题ERROR: architecture for "/boot/start_cd.elf" is "Broadcom VideoCore III processor", should be "AArch64"
 # 解决方案https://github.com/OP-TEE/optee_os/issues/3197
 # 在Ubuntu16.04中没有出现该问题，猜测要么是与系统版本有关，要么是在Ubuntu18.04下执行make -j `nproc`命令时文件被墙导致下载有缺失
+
+【6】Partition and Format SD card
+cd ~/optee-project/build
+make img-help
+sudo su
+mkfs.vfat -F16 -n BOOT /dev/sdb1
+mkdir -p /media/boot
+mount /dev/sdb1 /media/boot
+cd /media
+gunzip -cd /home/zad/optee-project/build/../out-br/images/rootfs.cpio.gz | sudo cpio -idmv "boot/*"
+umount boot
+mkfs.ext4 -L rootfs /dev/sdb2
+mkdir -p /media/rootfs
+mount /dev/sdb2 /media/rootfs
+cd rootfs
+gunzip -cd /home/zad/optee-project/build/../out-br/images/rootfs.cpio.gz | sudo cpio -idmv
+rm -rf /media/rootfs/boot/*
+cd .. && umount rootfs
+
+【7】Run xtest
