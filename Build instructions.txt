@@ -48,7 +48,6 @@ make -j2 toolchains # 注意：下载ARM平台的交叉编译器，该命令需�
 【5】Build the solution
 cd ~/optee-project/build
 make -j `nproc` # 注意：该命令需要高速稳定的VPN或VPS，在交叉编译过程中会下载部分文件
-
 # 在Ubuntu18.04中遇到问题ERROR: architecture for "/boot/start_cd.elf" is "Broadcom VideoCore III processor", should be "AArch64"
 # 解决方案https://github.com/OP-TEE/optee_os/issues/3197
 # 在Ubuntu16.04中没有出现该问题，猜测要么是与系统版本有关，要么是在Ubuntu18.04下执行make -j `nproc`命令时文件被墙导致下载有缺失
