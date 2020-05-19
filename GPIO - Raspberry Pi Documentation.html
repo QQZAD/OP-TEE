@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)https://www.raspberrypi.org/documentation/usage/gpio/README.md -->
+<html lang="en-GB"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>GPIO - Raspberry Pi Documentation</title>
+    <meta name="description" content="We&#39;ve provided some basic examples to help you discover possible uses for your Raspberry Pi and to get started with software available in Raspbian.">
+    <link rel="icon" type="image/png" href="https://www.raspberrypi.org/app/themes/mind-control/images/favicon.png">
+    <link rel="publisher" href="https://plus.google.com/+RaspberryPi">
+    <link rel="preconnect stylesheet" href="./GPIO - Raspberry Pi Documentation_files/css" media="all" type="text/css">
+    <link rel="stylesheet" href="./GPIO - Raspberry Pi Documentation_files/legacy.min.css">
+    <link rel="stylesheet" href="./GPIO - Raspberry Pi Documentation_files/prism.css">
+    <script type="text/javascript" async="" src="./GPIO - Raspberry Pi Documentation_files/ga.js"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="./GPIO - Raspberry Pi Documentation_files/prism.js"></script>
+
+    <script type="text/javascript">//<![CDATA[
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-46270871-1']);
+        _gaq.push(['_trackPageview']);
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+        //]]></script>
+
+    <link rel="canonical" href="https://www.raspberrypi.org/">
+    <link rel="shortlink" href="https://www.raspberrypi.org/">
+</head>
+
+<body class="documentation">
+    <header class="o-header">
+        <nav class="o-container o-header__container">
+            <a class="o-header__home-link" href="https://www.raspberrypi.org/">
+                <span class="u-visually-hidden">Home</span>
+            </a>
+
+            <div class="o-header__nav">
+                <ul class="c-nav">
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--products" href="https://www.raspberrypi.org/products/">
+                                Products                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--blog" href="https://www.raspberrypi.org/blog/">
+                                Blog                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--downloads" href="https://www.raspberrypi.org/downloads/">
+                                Downloads                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--community" href="https://www.raspberrypi.org/community/">
+                                Community                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--help" href="https://www.raspberrypi.org/help/">
+                                Help                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--forums" href="https://www.raspberrypi.org/forums/">
+                                Forums                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--education" href="https://www.raspberrypi.org/education/">
+                                Education                            </a>
+                        </li>
+                                            <li class="c-nav__item">
+                            <a class="c-nav__link c-nav__link--projects" href="https://projects.raspberrypi.org/?ref=nav">
+                                Projects                            </a>
+                        </li>
+                                    </ul>
+            </div>
+
+            <div class="o-header__spacer"></div>
+
+            <div class="o-header__search-toggle">
+                <span aria-hidden="true" class="c-search-toggle">
+                    <span class="u-visually-hidden">Open Search Input</span>
+                </span>
+            </div>
+
+            <div class="o-header__toggle">
+                <span aria-hidden="true" class="c-nav-toggle">
+                    <span class="c-nav-toggle__icon">
+                        <span class="c-nav-toggle__icon-inner">
+                            <span class="u-visually-hidden">Open Navigation</span>
+                        </span>
+                    </span>
+                </span>
+            </div>
+        </nav>
+    </header>
+
+    <div class="o-header__search">
+        <form action="https://www.raspberrypi.org/" class="c-search" role="search" method="GET">
+            <div class="o-container c-search__container">
+                <input type="search" class="c-search__input" placeholder="Search Raspberry Pi" name="s">
+                <button class="c-search__submit">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var header = document.querySelector('.o-header')
+        var navToggle = document.querySelector('.c-nav-toggle')
+
+        navToggle.addEventListener('click', function (event) {
+            event.preventDefault()
+
+            header.classList.toggle('o-header--nav-open')
+
+            document.querySelector('.c-nav-toggle__icon').classList.toggle('c-nav-toggle__icon--open')
+            document.querySelector('.c-nav-toggle__icon-inner').classList.toggle('c-nav-toggle__icon-inner--open')
+        })
+
+        var searchToggle = document.querySelector('.c-search-toggle')
+
+        searchToggle.addEventListener('click', function (event) {
+            event.preventDefault()
+
+            var searchContainer = document.querySelector('.o-header__search')
+            var searchInput = document.querySelector('.c-search__input')
+
+            searchInput.blur()
+            searchToggle.classList.toggle('c-search-toggle--open')
+            searchContainer.classList.toggle('o-header__search--open')
+
+            if (searchContainer.classList.contains('o-header__search--open')) {
+                searchInput.focus()
+            }
+        })
+    </script>
+
+    <div class="container">
+        <div class="main">
+
+<nav class="breadcrumbs">
+    <a href="https://www.raspberrypi.org/documentation">documentation</a> &gt; <a href="https://www.raspberrypi.org/documentation/usage">usage</a> &gt; <a href="https://www.raspberrypi.org/documentation/usage/gpio">gpio</a></nav>
+
+<article class="entry-content">
+    <h1>GPIO</h1>
+<p>A powerful feature of the Raspberry Pi is the row of GPIO (general-purpose input/output) pins along the top edge of the board. A 40-pin GPIO header is found on all current Raspberry Pi boards (unpopulated on Pi Zero and Pi Zero W). Prior to the Pi 1 Model B+ (2014), boards comprised a shorter 26-pin header.</p>
+<p><img alt="GPIO pins" src="./GPIO - Raspberry Pi Documentation_files/GPIO-Pinout-Diagram-2.png"></p>
+<p>Any of the GPIO pins can be designated (in software) as an input or output pin and used for a wide range of purposes.</p>
+<p><img alt="GPIO layout" src="./GPIO - Raspberry Pi Documentation_files/GPIO.png"></p>
+<p><strong>Note: the numbering of the GPIO pins is not in numerical order; GPIO pins 0 and 1 are present on the board (physical pins 27 and 28) but are reserved for advanced use (see below).</strong></p>
+<h2>Voltages</h2>
+<p>Two 5V pins and two 3V3 pins are present on the board, as well as a number of ground pins (0V), which are unconfigurable. The remaining pins are all general purpose 3V3 pins, meaning outputs are set to 3V3 and inputs are 3V3-tolerant.</p>
+<h2>Outputs</h2>
+<p>A GPIO pin designated as an output pin can be set to high (3V3) or low (0V).</p>
+<h2>Inputs</h2>
+<p>A GPIO pin designated as an input pin can be read as high (3V3) or low (0V). This is made easier with the use of internal pull-up or pull-down resistors. Pins GPIO2 and GPIO3 have fixed pull-up resistors, but for other pins this can be configured in software.</p>
+<h2>More</h2>
+<p>As well as simple input and output devices, the GPIO pins can be used with a variety of alternative functions, some are available on all pins, others on specific pins.</p>
+<ul>
+<li>PWM (pulse-width modulation)
+<ul>
+<li>Software PWM available on all pins</li>
+<li>Hardware PWM available on GPIO12, GPIO13, GPIO18, GPIO19</li>
+</ul></li>
+<li>SPI
+<ul>
+<li>SPI0: MOSI (GPIO10); MISO (GPIO9); SCLK (GPIO11); CE0 (GPIO8), CE1 (GPIO7)</li>
+<li>SPI1: MOSI (GPIO20); MISO (GPIO19); SCLK (GPIO21); CE0 (GPIO18); CE1 (GPIO17); CE2 (GPIO16)</li>
+</ul></li>
+<li>I2C
+<ul>
+<li>Data: (GPIO2); Clock (GPIO3)</li>
+<li>EEPROM Data: (GPIO0); EEPROM Clock (GPIO1)</li>
+</ul></li>
+<li>Serial
+<ul>
+<li>TX (GPIO14); RX (GPIO15)</li>
+</ul></li>
+</ul>
+<h2>GPIO pinout</h2>
+<p>It's important to be aware of which pin is which. Some people use pin labels (like the <a href="http://rasp.io/portsplus/">RasPiO Portsplus</a> PCB, or the printable <a href="https://github.com/splitbrain/rpibplusleaf">Raspberry Leaf</a>).</p>
+<p><img alt="" src="./GPIO - Raspberry Pi Documentation_files/raspio-portsplus.jpg"></p>
+<p>A handy reference can be accessed on the Raspberry Pi by opening a terminal window and running the command <code>pinout</code>. This tool is provided by the <a href="https://gpiozero.readthedocs.io/">GPIO Zero</a> Python library, which it is installed by default on the Raspbian desktop image, but not on Raspbian Lite.</p>
+<p><img alt="" src="./GPIO - Raspberry Pi Documentation_files/gpiozero-pinout.png"></p>
+<p>For more details on the advanced capabilities of the GPIO pins see gadgetoid's <a href="http://pinout.xyz/">interactive pinout diagram</a>.</p>
+<h2>Programming with GPIO</h2>
+<p>It is possible to control GPIO pins using a number of programming languages and tools. See the following guides to get started:</p>
+<ul>
+<li><a href="https://www.raspberrypi.org/documentation/usage/gpio/scratch1/README.md">GPIO with Scratch 1.4</a></li>
+<li><a href="https://www.raspberrypi.org/documentation/usage/gpio/scratch2/README.md">GPIO with Scratch 2</a></li>
+<li><a href="https://www.raspberrypi.org/documentation/usage/gpio/python/README.md">GPIO with Python</a></li>
+<li><a href="https://kernel.googlesource.com/pub/scm/libs/libgpiod/libgpiod/+/v0.2.x/README.md">GPIO with C/C++ using standard kernel interface via libgpiod</a></li>
+<li><a href="http://abyz.me.uk/rpi/pigpio/">GPIO with C/C++ using 3rd party library pigio</a></li>
+<li><a href="https://processing.org/reference/libraries/io/GPIO.html">GPIO with Processing3</a></li>
+</ul>
+<p><strong>Warning: while connecting up simple components to the GPIO pins is perfectly safe, it's important to be careful how you wire things up. LEDs should have resistors to limit the current passing through them. Do not use 5V for 3V3 components. Do not connect motors directly to the GPIO pins, instead use an <a href="https://projects.raspberrypi.org/en/projects/physical-computing/16">H-bridge circuit or a motor controller board</a>.</strong></p></article>
+
+                <footer class="licence">
+                    <aside class="octocat">
+                        <a href="https://github.com/raspberrypi/documentation/blob/master/usage/gpio/README.md"><img src="./GPIO - Raspberry Pi Documentation_files/octocat.jpg"></a>
+                    </aside>
+                    <aside class="links">
+                        <a href="https://github.com/raspberrypi/documentation/blob/master/usage/gpio/README.md" class="github">View/Edit this page on GitHub</a><br>
+                        <a href="https://www.raspberrypi.org/creative-commons/">Read our usage and contributions policy</a><br>
+                        <a href="https://www.raspberrypi.org/creative-commons/" class="cc"><img src="./GPIO - Raspberry Pi Documentation_files/88x31.png" alt="Creative Commons Licence"></a>
+                    </aside>
+                </footer>
+
+                <div style="clear: both;"></div>
+
+            </div>
+
+        <div style="clear: both;"></div>
+    </div>
+
+    <footer class="o-footer">
+        <div class="o-footer__slice">
+            <div class="o-container o-footer__container">
+                <div class="o-footer__nav">
+                    <div class="c-footer-nav">
+                        <span class="c-footer-nav__title">About Us</span>
+
+                        <ul class="c-footer-nav__list">
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/about">About us</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/about/meet-the-team">Our team</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/about/governance">Governance</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/safeguarding">Safeguarding</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/about/supporters">Our supporters</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://raspberrypi.workable.com/">Jobs</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/contact">Contact us</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="o-footer__nav">
+                    <div class="c-footer-nav">
+                        <span class="c-footer-nav__title">Support</span>
+
+                        <ul class="c-footer-nav__list">
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/help">Help</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/documentation">Documentation</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://projects.raspberrypi.org/">Projects</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/training">Training</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/downloads">Downloads</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/research-and-insights">Research</a>
+                            </li>
+                            <li class="c-footer-nav__item">
+                                <a class="c-footer-nav__link" href="https://www.raspberrypi.org/help/faqs">FAQ</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="o-footer__newsletter">
+                    <form action="https://raspberrypi.hosted.phplist.com/lists/?p=subscribe&amp;id=1" class="c-footer-newsletter" method="POST">
+                        <span class="c-footer-newsletter__legend">
+                            Sign up to our newsletter
+                        </span>
+                        <input class="c-footer-newsletter__input" name="email" placeholder="Your email here" required="" type="email">
+                        <input type="hidden" name="htmlemail" value="1">
+                        <input type="hidden" name="list[3]" value="signup">
+                        <input type="hidden" name="listname[3]" value="Raspberry Pi Weekly">
+                        <input class="c-footer-newsletter__input--verification-code" type="text" name="VerificationCodeX" value="" size="20">
+                        <button class="c-footer-newsletter__button" name="subscribe">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+
+                <div class="o-footer__info">
+                    <ul class="c-footer-social">
+                        <li class="c-footer-social__item">
+                            <a class="c-footer-social__link c-footer-social__link--facebook" href="https://www.facebook.com/raspberrypi">
+                                <span class="u-visually-hidden">Like Raspberry Pi on Facebook</span>
+                            </a>
+                        </li>
+                        <li class="c-footer-social__item">
+                            <a class="c-footer-social__link c-footer-social__link--twitter" href="https://twitter.com/Raspberry_Pi">
+                                <span class="u-visually-hidden">Follow Raspberry Pi on Twitter</span>
+                            </a>
+                        </li>
+                        <li class="c-footer-social__item">
+                            <a class="c-footer-social__link c-footer-social__link--instagram" href="https://www.instagram.com/raspberrypi/">
+                                <span class="u-visually-hidden">Check out what we’re having for lunch on Instagram</span>
+                            </a>
+                        </li>
+                        <li class="c-footer-social__item">
+                            <a class="c-footer-social__link c-footer-social__link--youtube" href="https://youtube.com/raspberrypi">
+                                <span class="u-visually-hidden">Subscribe to the Raspberry Pi YouTube channel</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <p class="c-footer-charity">
+                        Raspberry Pi Foundation<br>
+                        UK Registered Charity 1129409
+                    </p>
+
+                    <p class="c-footer-additional">
+                        <a class="c-footer-additional__link" href="https://www.raspberrypi.org/privacy">Privacy</a>
+                        <a class="c-footer-additional__link" href="https://www.raspberrypi.org/cookies">Cookies</a>
+                        <a class="c-footer-additional__link" href="https://www.raspberrypi.org/trademark-rules">Trademark rules and brand guidelines</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+</body></html>

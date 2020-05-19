@@ -70,4 +70,12 @@ gunzip -cd /home/zad/optee-project/build/../out-br/images/rootfs.cpio.gz | sudo 
 rm -rf /media/rootfs/boot/*
 cd .. && umount rootfs
 
-【7】Run xtest
+【7】Raspberry Pi连接电脑串口通信
+sudo apt-get install picocom -y
+USB TO TTL串口模块的TXD连接Raspberry Pi主板GPIO的RXD
+USB TO TTL串口模块的RXD连接Raspberry Pi主板GPIO的TXD
+USB TO TTL串口模块的GND连接Raspberry Pi主板GPIO的GND
+使用Raspberry Pi上的microUSB供电
+USB TO TTL串口模块的USB端插入电脑
+
+【8】Run xtest
