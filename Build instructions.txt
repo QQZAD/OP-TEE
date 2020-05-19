@@ -1,0 +1,54 @@
+# 注意：建议在Ubuntu16.04系统中进行交叉编译（在其他系统中测试出现错误，原因尚不清楚）
+# 注意：同时保证整个过程尽量在同一终端中
+【1】Prerequisites
+sudo dpkg --add-architecture i386
+sudo apt-get update
+sudo apt-get install android-tools-adb android-tools-fastboot autoconf \
+	automake bc bison build-essential ccache cscope curl device-tree-compiler \
+	expect flex ftp-upload gdisk iasl libattr1-dev libc6:i386 libcap-dev \
+	libfdt-dev libftdi-dev libglib2.0-dev libhidapi-dev libncurses5-dev \
+	libpixman-1-dev libssl-dev libstdc++6:i386 libtool libz1:i386 make \
+	mtools netcat python-crypto python3-crypto python-pyelftools \
+	python3-pyelftools python-serial python3-serial \
+	rsync unzip uuid-dev xdg-utils xterm xz-utils zlib1g-dev
+# 注意，选中 'zlib1g:i386' 而非 'libz1:i386'
+python3 -m pip install --user pycryptodome
+pip3 install pycryptodomex
+# 注意：在Ubuntu16.04系统中python3 -m pip install --user pycryptodome可能无法为python3正确安装pycryptodome，建议执行pip3 install pycryptodomex命令
+
+【2】Install Android repo
+mkdir ~/bin
+PATH=~/bin:$PATH # 注意：该PATH环境变量只在运行配置命令的终端中有效
+curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+chmod a+x ~/bin/repo
+git config --global user.name "QQZAD"
+git config --global user.email "2298070398@qq.com"
+
+【3】Get the source code
+mkdir -p optee-project
+cd optee-project
+repo init -u https://github.com/OP-TEE/manifest.git -m rpi3.xml # 注意：该命令需要高速稳定的VPN或VPS，否则会出现各种错误
+repo sync -j4 --no-clone-bundle # 注意：该命令需要高速稳定的VPN或VPS，否则会出现各种错误，此命令需要较长时间
+
+【4】Get the toolchains
+cd ~/optee-project/build
+make -j2 toolchains # 注意：下载ARM平台的交叉编译器，该命令需要高速稳定的VPN或VPS
+# 注意：toolchains的下载地址见optee-project/build/toolchain.mk
+# https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz
+# https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz
+# （1）手动下载针对ARM平台的交叉编译器gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf和gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu
+# （2）mkdir ~/optee-project/toolchains
+# （3）将gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf和gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu放在optee-project/toolchains下
+# （4）修改optee-project/build/toolchain.mk的内容：
+# https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/${AARCH32_GCC_VERSION}.tar.xz -> file://~/optee-project/toolchains/${AARCH32_GCC_VERSION}.tar.xz
+# https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/${AARCH64_GCC_VERSION}.tar.xz -> file://~/optee-project/toolchains/${AARCH64_GCC_VERSION}.tar.xz
+# （5）cd ~/optee-project/build
+# （6）make -j2 toolchains
+
+【5】Build the solution
+cd ~/optee-project/build
+make -j `nproc` # 注意：该命令需要高速稳定的VPN或VPS，在交叉编译过程中会下载部分文件
+
+# 在Ubuntu18.04中遇到问题ERROR: architecture for "/boot/start_cd.elf" is "Broadcom VideoCore III processor", should be "AArch64"
+# 解决方案https://github.com/OP-TEE/optee_os/issues/3197
+# 在Ubuntu16.04中没有出现该问题，猜测要么是与系统版本有关，要么是在Ubuntu18.04下执行make -j `nproc`命令时文件被墙导致下载有缺失
