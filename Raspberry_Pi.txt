@@ -1,0 +1,14 @@
+1.准备Ubuntu MATE系统https://ubuntu-mate.org/download/armhf/
+2.使用GParted卸载SD卡后对其格式化
+3.系统烧录
+sudo dd bs=8M if=/home/zad/ubuntu-mate-18.04.2-beta1-desktop-armhf+raspi-ext4.img of=/dev/sdb
+bs:blocksize	表示一次块的大小，默认为4Mb
+if:input file	img镜像的路径
+of:output file	SD卡的设备地址
+4.查看进度
+不断运行sudo pkill -USR1 -n -x dd命令查看最新进度
+5.将SD卡插入主板背面的卡槽中
+6.连接电源启动Raspberry Pi并安装Ubuntu MATE系统
+Raspberry Pi默认用户名：pi
+Raspberry Pi默认密码：123
+7.Raspberry Pi连接显示器若没有反应可以将两端对调试试
