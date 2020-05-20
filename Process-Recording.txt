@@ -1,4 +1,3 @@
-# 注意：建议在Ubuntu16.04系统中进行交叉编译（在其他系统中测试出现错误，原因尚不清楚）
 # 注意：同时保证整个过程尽量在同一终端中
 【0】为Raspberry Pi安装Ubuntu MATE系统，并通过sudo passwd root命令设置root用户的密码
 【1】Prerequisites
@@ -14,15 +13,15 @@ sudo apt-get install android-tools-adb android-tools-fastboot autoconf \
 	rsync unzip uuid-dev xdg-utils xterm xz-utils zlib1g-dev
 python3 -m pip install --user pycryptodome
 pip3 install pycryptodomex
-# 注意：在Ubuntu16.04系统中python3 -m pip install --user pycryptodome可能无法为python3正确安装pycryptodome，建议执行pip3 install pycryptodomex命令
+# 注意：python3 -m pip install --user pycryptodome可能无法为python3正确安装pycryptodome，建议执行pip3 install pycryptodomex命令
 
 【2】Install Android repo
 mkdir ~/bin
 PATH=~/bin:$PATH # 注意：该PATH环境变量只在运行配置命令的终端中有效
 curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
 chmod a+x ~/bin/repo
-git config --global user.name "QQZAD"
-git config --global user.email "2298070398@qq.com"
+git config --global user.name "QQZAD" # 注意：此处使用自己的用户名
+git config --global user.email "2298070398@qq.com" # 注意：此处使用自己的邮箱
 
 【3】Get the source code
 mkdir -p optee-project
@@ -48,11 +47,14 @@ make -j2 toolchains # 注意：下载ARM平台的交叉编译器，该命令需�
 【5】Build the solution
 cd ~/optee-project/build
 make -j `nproc` # 注意：该命令需要高速稳定的VPN或VPS，在交叉编译过程中会下载部分文件
-# 在Ubuntu18.04中遇到问题ERROR: architecture for "/boot/start_cd.elf" is "Broadcom VideoCore III processor", should be "AArch64"
+# 交叉编译过程遇到问题ERROR: architecture for "/boot/start_cd.elf" is "Broadcom VideoCore III processor", should be "AArch64"
 # 解决方案https://github.com/OP-TEE/optee_os/issues/3197
-# 在Ubuntu16.04中没有出现该问题，猜测要么是与系统版本有关，要么是在Ubuntu18.04下执行make -j `nproc`命令时文件被墙导致下载有缺失
+# 这个问题一般与执行make -j `nproc`命令时下载文件缺失有关，同时务必通过【3】Get the source code中repo sync -j4 --no-clone-bundle将源代码更新到最新，建议运行make clean重试
 
 【6】Partition and Format SD card
+# 注意：这里的sdb1和sdb2指的是SD卡上的boot分区（fat16）和系统分区（ext4），要根据实际情况
+sudo umount /dev/sdb1
+sudo umount /dev/sdb2
 cd ~/optee-project/build
 make img-help
 sudo su
@@ -74,14 +76,20 @@ cd .. && umount rootfs
 # USB TO TTL串口模块的TXD通过杜邦线连接Raspberry Pi主板GPIO的RXD
 # USB TO TTL串口模块的RXD通过杜邦线连接Raspberry Pi主板GPIO的TXD
 # USB TO TTL串口模块的GND通过杜邦线连接Raspberry Pi主板GPIO的GND
-# https://www.raspberrypi.org/documentation/usage/gpio/README.md
+# Raspberry Pi主板GPIO说明见https://www.raspberrypi.org/documentation/usage/gpio/README.md
 # 使用Raspberry Pi上的microUSB供电
 # USB TO TTL串口模块的USB端连接电脑
 sudo apt-get install picocom -y
 sudo picocom -b 115200 /dev/ttyUSB0
 # 打开Raspberry Pi电源，通过串口调试可以看到系统和可信固件的启动信息
-# 按照控制台说明登录Raspberry Pi系统
+# 输入root登录Buildroot
 
 【8】Run xtest
-# 运行xtest遇到问题Failed to open TEE context: 0xffff0008
-# 运行optee_example_hello_world遇到问题optee_example_hello_world: TEEC_InitializeContext failed with code 0xffff0008
+在Buildroot中运行xtest命令
+# 若配置成功在最后会输出如下信息：
+# ...
+# +-----------------------------------------------------
+# 24785 subtests of which 0 failed
+# 102 test cases of which 0 failed
+# 0 test cases were skipped
+# TEE test application done!
