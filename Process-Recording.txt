@@ -1,5 +1,6 @@
 # 注意：建议在Ubuntu16.04系统中进行交叉编译（在其他系统中测试出现错误，原因尚不清楚）
 # 注意：同时保证整个过程尽量在同一终端中
+【0】为Raspberry Pi安装Ubuntu MATE系统，并通过sudo passwd root命令设置root用户的密码
 【1】Prerequisites
 sudo dpkg --add-architecture i386
 sudo apt-get update
@@ -11,7 +12,6 @@ sudo apt-get install android-tools-adb android-tools-fastboot autoconf \
 	mtools netcat python-crypto python3-crypto python-pyelftools \
 	python3-pyelftools python-serial python3-serial \
 	rsync unzip uuid-dev xdg-utils xterm xz-utils zlib1g-dev
-# 注意，选中 'zlib1g:i386' 而非 'libz1:i386'
 python3 -m pip install --user pycryptodome
 pip3 install pycryptodomex
 # 注意：在Ubuntu16.04系统中python3 -m pip install --user pycryptodome可能无法为python3正确安装pycryptodome，建议执行pip3 install pycryptodomex命令
@@ -55,19 +55,20 @@ make -j `nproc` # 注意：该命令需要高速稳定的VPN或VPS，在交叉�
 【6】Partition and Format SD card
 cd ~/optee-project/build
 make img-help
-sudo mkfs.vfat -F16 -n BOOT /dev/sdb1
-sudo mkdir -p /media/boot
-sudo mount /dev/sdb1 /media/boot
+sudo su
+mkfs.vfat -F16 -n BOOT /dev/sdb1
+mkdir -p /media/boot
+mount /dev/sdb1 /media/boot
 cd /media
-sudo gunzip -cd /home/zad/optee-project/build/../out-br/images/rootfs.cpio.gz | sudo cpio -idmv "boot/*"
-sudo umount boot
-sudo mkfs.ext4 -L rootfs /dev/sdb2
-sudo mkdir -p /media/rootfs
-sudo mount /dev/sdb2 /media/rootfs
+gunzip -cd /home/zad/optee-project/build/../out-br/images/rootfs.cpio.gz | sudo cpio -idmv "boot/*"
+umount boot
+mkfs.ext4 -L rootfs /dev/sdb2
+mkdir -p /media/rootfs
+mount /dev/sdb2 /media/rootfs
 cd rootfs
-sudo gunzip -cd /home/zad/optee-project/build/../out-br/images/rootfs.cpio.gz | sudo cpio -idmv
-sudo rm -rf /media/rootfs/boot/*
-cd .. && sudo umount rootfs
+gunzip -cd /home/zad/optee-project/build/../out-br/images/rootfs.cpio.gz | sudo cpio -idmv
+rm -rf /media/rootfs/boot/*
+cd .. && umount rootfs
 
 【7】实现Raspberry Pi和电脑间的串口通信
 # USB TO TTL串口模块的TXD通过杜邦线连接Raspberry Pi主板GPIO的RXD
