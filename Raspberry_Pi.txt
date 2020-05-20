@@ -11,4 +11,6 @@ of:output file	SD卡的设备地址
 6.连接电源启动Raspberry Pi并安装Ubuntu MATE系统
 Raspberry Pi默认用户名：pi
 Raspberry Pi默认密码：123
+红灯亮表示通电成功
+绿灯闪烁表示正在读写SD卡
 7.Raspberry Pi连接显示器若没有反应可以将两端对调试试
