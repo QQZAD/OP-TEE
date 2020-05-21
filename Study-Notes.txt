@@ -6,10 +6,10 @@ OP-TEE遵循GlobalPlatform API定义的规范
 
 GNU/Linux发行版或AOSP中的Linux OS属于非安全的OS，一般称为Rich Execution Environment (REE)。TAs有两种实现方式，一种是Pseudo TAs，另一种是User Mode TAs，一般情况下的TAs指的是User Mode TAs。当REE中的某些东西想与特定应用的UUID对话时，安全世界中的OP-TEE核心就会将User Mode TAs加载至内存，User Mode TAs的CPU特权级别要低于OP-TEE核心。
 
-Linux OS的核心是内核，而文件系统是用户与OS交互的主要工具，根文件系统Rootfs是Linux内核挂载的第一个文件系统。OP-TEE针对特定的平台基于Buildroot配置文件自动生成生成所需的交叉编译工具链，并创建嵌入式系统下的Rootfs，其Rootfs是轻量级的，仅仅用于启动OP-TEE、正确运行xtest和添加附加的开发工具，同时仅支持基于UART的环境。
+Linux OS的核心是内核，而文件系统是用户与OS交互的主要工具，根文件系统Rootfs是Linux内核挂载的第一个文件系统。OP-TEE针对特定的平台基于Buildroot配置文件自动生成所需的交叉编译工具链，并创建嵌入式系统下的Rootfs，其Rootfs是轻量级的，仅仅用于启动OP-TEE、正确运行xtest和添加附加的开发工具，同时仅支持基于UART的环境，不支持HDMI和Wi-Fi。
 
-optee_os为Linux创建了一个精简的文件系统，包含了TAs、client libraries和TEE supplican等OP-TEE二进制文件，
-在build的common.mk中添加新行来添加/启用其他包，具体实现在git中搜索BR2_PACKAGE_以查看它是
+optee_os为Linux创建了一个精简的文件系统，包含了TAs、client libraries和TEE supplicant等OP-TEE二进制文件，
+在https://github.com/OP-TEE/build的common.mk中添加新行来添加/启用其他包，在git中搜索BR2_PACKAGE_以查看具体实现。
 
 
 
