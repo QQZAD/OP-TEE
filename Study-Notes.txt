@@ -11,6 +11,6 @@ Linux OS的核心是内核，而文件系统是用户与OS交互的主要工具�
 
 optee_os为Linux创建了一个精简的文件系统，包含了TAs、client libraries和TEE supplicant等OP-TEE二进制文件。
 
-optee_os由U-boot引导，基于Buildroot构建
+optee_os由U-boot引导，基于Buildroot构建，包含了linux OS中的主要命令。
 在U-boot下点击Tab键显示所有命令。
 在Buildroot下点击Tab键显示所有命令。
