@@ -93,3 +93,5 @@ sudo picocom -b 115200 /dev/ttyUSB0
 # 102 test cases of which 0 failed
 # 0 test cases were skipped
 # TEE test application done!
+optee_example
+通过ps aux | grep tee-supplicant命令查看tee-supplicant是否加载

@@ -1,0 +1,16 @@
+OP-TEE遵循GlobalPlatform API定义的规范
+【1】optee_client：Normal World Client side of the TEE
+与TEE通信，实现TEE Client API v1.0规范
+【2】optee_os：Trusted side of the TEE
+隔离运行Trusted Applications (TAs)的可信安全OS，实现TEE Internal Core API v1.1.x规范，该规范对TAs和TEE Client API v1.0是可见的。
+
+GNU/Linux发行版或AOSP中的Linux OS属于非安全的OS，一般称为Rich Execution Environment (REE)。TAs有两种实现方式，一种是Pseudo TAs，另一种是User Mode TAs，一般情况下的TAs指的是User Mode TAs。当REE中的某些东西想与特定应用的UUID对话时，安全世界中的OP-TEE核心就会将User Mode TAs加载至内存，User Mode TAs的CPU特权级别要低于OP-TEE核心。
+
+Linux OS的核心是内核，而文件系统是用户与OS交互的主要工具，根文件系统Rootfs是Linux内核挂载的第一个文件系统。OP-TEE针对特定的平台基于Buildroot配置文件自动生成生成所需的交叉编译工具链，并创建嵌入式系统下的Rootfs，其Rootfs是轻量级的，仅仅用于启动OP-TEE、正确运行xtest和添加附加的开发工具，同时仅支持基于UART的环境。
+
+optee_os为Linux创建了一个精简的文件系统，包含了TAs、client libraries和TEE supplican等OP-TEE二进制文件，
+在build的common.mk中添加新行来添加/启用其他包，具体实现在git中搜索BR2_PACKAGE_以查看它是如何完成的)。
+通过在内建添加/启用额外的包
+
+
+
