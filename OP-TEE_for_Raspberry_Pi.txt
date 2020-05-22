@@ -27,6 +27,7 @@ git config --global user.email "2298070398@qq.com" # 注意：此处使用自己
 mkdir -p optee-project
 cd optee-project
 repo init -u https://github.com/OP-TEE/manifest.git -m rpi3.xml # 注意：该命令需要高速稳定的VPN或VPS，否则会出现各种错误
+# 对于QEMU v7应该改成default.xml，对于QEMU v8应该改成qemu_v8.xml
 repo sync -j4 --no-clone-bundle # 注意：该命令需要高速稳定的VPN或VPS，否则会出现各种错误，此命令需要较长时间
 
 【4】Get the toolchains
