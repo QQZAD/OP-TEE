@@ -14,3 +14,10 @@ optee_os为Linux创建了一个精简的文件系统，包含了TAs、client lib
 optee_os由U-boot引导，基于Buildroot构建，包含了linux OS中的主要命令。
 在U-boot下点击Tab键显示所有命令。
 在Buildroot下点击Tab键显示所有命令。
+
+ARM官方文档
+https://developer.arm.com/docs
+
+TrustZone官方文档
+https://developer.arm.com/docs/genc009492/c
+
