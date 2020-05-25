@@ -114,4 +114,12 @@ sudo picocom -b 115200 /dev/ttyUSB0
 # ncrementD/TC:? 0 destroy_context:298 Destroy TA ctx (0x10178ad0)
 #  42
 # TA incremented value to 43
+类似的测试命令还有：
+optee_example_acipher
+optee_example_aes
+optee_example_htop
+optee_example_random
+optee_example_secure_storage
 通过ps aux | grep tee-supplicant命令查看tee-supplicant是否加载
+
+【9】新建TA
