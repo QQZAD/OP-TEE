@@ -120,6 +120,3 @@ optee_example_htop
 optee_example_random
 optee_example_secure_storage
 通过ps aux | grep tee-supplicant命令查看tee-supplicant是否加载
-
-【9】新建TA
-/usr/bin/new_TA

@@ -1,0 +1,18 @@
+安装QEMU软件包
+sudo apt-get install qemu -y
+
+获取QEMU源代码
+git clone https://git.qemu.org/git/qemu.git
+cd ~/qemu
+git pull
+git submodule init
+git submodule update --recursive
+
+QEMU官方下载地址
+https://www.qemu.org/download/
+
+main documentation section
+https://www.qemu.org/docs/master/
+
+QEMU wiki
+https://wiki.qemu.org/Documentation

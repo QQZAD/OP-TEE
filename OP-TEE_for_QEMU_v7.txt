@@ -1,5 +1,4 @@
-# 注意：同时保证整个过程尽量在同一终端中
-【0】为Raspberry Pi安装Ubuntu MATE系统，并通过sudo passwd root命令设置root用户的密码
+# 注意：保证整个过程尽量在同一终端中
 【1】Prerequisites
 sudo dpkg --add-architecture i386
 sudo apt-get update
@@ -24,68 +23,30 @@ git config --global user.name "QQZAD" # 注意：此处使用自己的用户名
 git config --global user.email "2298070398@qq.com" # 注意：此处使用自己的邮箱
 
 【3】Get the source code
-mkdir -p optee-project
-cd optee-project
-repo init -u https://github.com/OP-TEE/manifest.git -m rpi3.xml # 注意：该命令需要高速稳定的VPN或VPS，否则会出现各种错误
-# 对于QEMU v7应该改成default.xml，对于QEMU v8应该改成qemu_v8.xml
+mkdir -p qemu-v7-project
+cd qemu-v7-project
+repo init -u https://github.com/OP-TEE/manifest.git -m default.xml # 注意：该命令需要高速稳定的VPN或VPS，否则会出现各种错误
 repo sync -j4 --no-clone-bundle # 注意：该命令需要高速稳定的VPN或VPS，否则会出现各种错误，此命令需要较长时间
 
 【4】Get the toolchains
-cd ~/optee-project/build
+cd ~/qemu-v7-project/build
 make -j2 toolchains # 注意：下载ARM平台的交叉编译器，该命令需要高速稳定的VPN或VPS
-# 注意：toolchains的下载地址见optee-project/build/toolchain.mk
+# 注意：toolchains的下载地址见qemu-v7-project/build/toolchain.mk
 # https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz
 # https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz
 # （1）手动下载针对ARM平台的交叉编译器gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf和gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu
-# （2）mkdir ~/optee-project/toolchains
-# （3）将gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf和gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu放在optee-project/toolchains下
-# （4）修改optee-project/build/toolchain.mk的内容：
-# https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/${AARCH32_GCC_VERSION}.tar.xz -> file://~/optee-project/toolchains/${AARCH32_GCC_VERSION}.tar.xz
-# https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/${AARCH64_GCC_VERSION}.tar.xz -> file://~/optee-project/toolchains/${AARCH64_GCC_VERSION}.tar.xz
-# （5）cd ~/optee-project/build
+# （2）mkdir ~/qemu-v7-project/toolchains
+# （3）将gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf和gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu放在qemu-v7-project/toolchains下
+# （4）修改qemu-v7-project/build/toolchain.mk的内容：
+# https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/${AARCH32_GCC_VERSION}.tar.xz -> file://~/qemu-v7-project/toolchains/${AARCH32_GCC_VERSION}.tar.xz
+# https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/${AARCH64_GCC_VERSION}.tar.xz -> file://~/qemu-v7-project/toolchains/${AARCH64_GCC_VERSION}.tar.xz
+# （5）cd ~/qemu-v7-project/build
 # （6）make -j2 toolchains
-# 对于QEMU v7应该为qemu手动下载子模块capstone、dtc、authz
-# 同时.git/modules文件夹也是必备的
+# 将QEMU源代码中的文件夹capstone、dtc、authz和.git/modules全部复制到qemu-v7-project/qemu中
 
 【5】Build the solution
-cd ~/optee-project/build
+cd ~/qemu-v7-project/build
 make -j `nproc` # 注意：该命令需要高速稳定的VPN或VPS，在交叉编译过程中会下载部分文件
-# 交叉编译过程遇到问题ERROR: architecture for "/boot/start_cd.elf" is "Broadcom VideoCore III processor", should be "AArch64"
-# 解决方案https://github.com/OP-TEE/optee_os/issues/3197
-# 这个问题一般与执行make -j `nproc`命令时下载文件缺失有关，同时务必通过【3】Get the source code中repo sync -j4 --no-clone-bundle将源代码更新到最新，建议运行make clean重试
-
-【6】Partition and Format SD card
-# 注意：这里的sdb1和sdb2指的是SD卡上的boot分区（fat16）和系统分区（ext4），要根据实际情况
-sudo umount /dev/sdb1
-sudo umount /dev/sdb2
-cd ~/optee-project/build
-make img-help
-sudo su
-mkfs.vfat -F16 -n BOOT /dev/sdb1
-mkdir -p /media/boot
-mount /dev/sdb1 /media/boot
-cd /media
-gunzip -cd /home/zad/optee-project/build/../out-br/images/rootfs.cpio.gz | sudo cpio -idmv "boot/*"
-umount boot
-mkfs.ext4 -L rootfs /dev/sdb2
-mkdir -p /media/rootfs
-mount /dev/sdb2 /media/rootfs
-cd rootfs
-gunzip -cd /home/zad/optee-project/build/../out-br/images/rootfs.cpio.gz | sudo cpio -idmv
-rm -rf /media/rootfs/boot/*
-cd .. && umount rootfs
-
-【7】实现Raspberry Pi和电脑间的串口通信
-# USB TO TTL串口模块的TXD通过杜邦线连接Raspberry Pi主板GPIO的RXD
-# USB TO TTL串口模块的RXD通过杜邦线连接Raspberry Pi主板GPIO的TXD
-# USB TO TTL串口模块的GND通过杜邦线连接Raspberry Pi主板GPIO的GND
-# Raspberry Pi主板GPIO说明见https://www.raspberrypi.org/documentation/usage/gpio/README.md
-# 使用Raspberry Pi上的microUSB供电
-# USB TO TTL串口模块的USB端连接电脑
-sudo apt-get install picocom -y
-sudo picocom -b 115200 /dev/ttyUSB0
-# 打开Raspberry Pi电源，通过串口调试可以看到系统和可信固件的启动信息
-# 输入root登录Buildroot
 
 【8】Run xtest
 在Buildroot中运行xtest命令
@@ -123,6 +84,3 @@ optee_example_htop
 optee_example_random
 optee_example_secure_storage
 通过ps aux | grep tee-supplicant命令查看tee-supplicant是否加载
-
-【9】新建TA
-/usr/bin/new_TA

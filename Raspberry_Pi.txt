@@ -1,3 +1,7 @@
+OP-TEE支持Raspberry Pi B3 B3+
+Ubuntu MATE支持Raspberry Pi B2 B3 B3+
+https://ubuntu-mate.org/download/armhf/
+
 1.准备Ubuntu MATE系统https://ubuntu-mate.org/download/armhf/
 2.使用GParted卸载SD卡后对其格式化
 3.系统烧录
