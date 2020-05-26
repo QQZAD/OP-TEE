@@ -27,6 +27,9 @@ mkdir -p qemu-v7-project
 cd qemu-v7-project
 repo init -u https://github.com/OP-TEE/manifest.git -m default.xml # 注意：该命令需要高速稳定的VPN或VPS，否则会出现各种错误
 repo sync -j4 --no-clone-bundle # 注意：该命令需要高速稳定的VPN或VPS，否则会出现各种错误，此命令需要较长时间
+# 获取QEMU源代码（见QEMU.txt）
+# 将QEMU源代码中的capstone、dtc、authz三个文件夹全部复制到qemu-v7-project/qemu中
+# 将QEMU源代码中的.git/modules文件夹复制到qemu-v7-project/qemu/.git中
 
 【4】Get the toolchains
 cd ~/qemu-v7-project/build
@@ -42,13 +45,12 @@ make -j2 toolchains # 注意：下载ARM平台的交叉编译器，该命令需�
 # https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/${AARCH64_GCC_VERSION}.tar.xz -> file://~/qemu-v7-project/toolchains/${AARCH64_GCC_VERSION}.tar.xz
 # （5）cd ~/qemu-v7-project/build
 # （6）make -j2 toolchains
-# 将QEMU源代码中的文件夹capstone、dtc、authz和.git/modules全部复制到qemu-v7-project/qemu中
 
 【5】Build the solution
 cd ~/qemu-v7-project/build
 make -j `nproc` # 注意：该命令需要高速稳定的VPN或VPS，在交叉编译过程中会下载部分文件
 
-【8】Run xtest
+【7】Run xtest
 在Buildroot中运行xtest命令
 # 若配置成功在最后会输出如下信息：
 # ...
