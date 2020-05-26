@@ -1,4 +1,4 @@
-# 注意：保证整个过程尽量在同一终端中
+# 注意：保证整个过程尽量在同一终端中，VPN或VPS的节点尽量选择韩国或日本
 【1】Prerequisites
 sudo dpkg --add-architecture i386
 sudo apt-get update
