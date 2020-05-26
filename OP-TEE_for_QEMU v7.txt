@@ -27,6 +27,7 @@ git config --global user.email "2298070398@qq.com" # 注意：此处使用自己
 mkdir -p optee-project
 cd optee-project
 repo init -u https://github.com/OP-TEE/manifest.git -m rpi3.xml # 注意：该命令需要高速稳定的VPN或VPS，否则会出现各种错误
+# 对于QEMU v7应该改成default.xml，对于QEMU v8应该改成qemu_v8.xml
 repo sync -j4 --no-clone-bundle # 注意：该命令需要高速稳定的VPN或VPS，否则会出现各种错误，此命令需要较长时间
 
 【4】Get the toolchains
@@ -43,6 +44,8 @@ make -j2 toolchains # 注意：下载ARM平台的交叉编译器，该命令需�
 # https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/${AARCH64_GCC_VERSION}.tar.xz -> file://~/optee-project/toolchains/${AARCH64_GCC_VERSION}.tar.xz
 # （5）cd ~/optee-project/build
 # （6）make -j2 toolchains
+# 对于QEMU v7应该为qemu手动下载子模块capstone、dtc、authz
+# 同时.git/modules文件夹也是必备的
 
 【5】Build the solution
 cd ~/optee-project/build
