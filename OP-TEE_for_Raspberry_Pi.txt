@@ -116,7 +116,7 @@ sudo picocom -b 115200 /dev/ttyUSB0
 类似的测试命令还有：
 optee_example_acipher
 optee_example_aes
-optee_example_htop
+optee_example_hotp
 optee_example_random
 optee_example_secure_storage
 通过ps aux | grep tee-supplicant命令查看tee-supplicant是否加载

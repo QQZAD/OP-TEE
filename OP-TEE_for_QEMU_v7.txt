@@ -50,7 +50,26 @@ make -j2 toolchains # 注意：下载ARM平台的交叉编译器，该命令需�
 cd ~/qemu-v7-project/build
 make -j `nproc` # 注意：该命令需要高速稳定的VPN或VPS，在交叉编译过程中会下载部分文件
 
-【7】Run xtest
+【6】Flash the device
+cd ~/qemu-v7-project/build
+make flash
+
+【7】Boot up the device
+cd ~/qemu-v7-project/build
+make run 或 make run-only
+# 运行后会进入QEMU模拟器并出现NW UART终端和SW UART终端
+# 在QEMU终端中输入命令c以启动安全世界和普通世界
+# 在安全世界中输入root登录Buildroot
+# QEMU的部分命令：
+# system_reset	重置系统
+# c	继续模拟
+# q	退出模拟
+
+【8】Load tee-supplicant
+# 通过ps aux | grep tee-supplicant命令查看tee-supplicant是否加载
+# 如果没有通过tee-supplicant -d命令加载tee-supplicant
+
+【9】Run xtest
 在Buildroot中运行xtest命令
 # 若配置成功在最后会输出如下信息：
 # ...
@@ -82,7 +101,6 @@ make -j `nproc` # 注意：该命令需要高速稳定的VPN或VPS，在交叉�
 类似的测试命令还有：
 optee_example_acipher
 optee_example_aes
-optee_example_htop
+optee_example_hotp
 optee_example_random
 optee_example_secure_storage
-通过ps aux | grep tee-supplicant命令查看tee-supplicant是否加载
