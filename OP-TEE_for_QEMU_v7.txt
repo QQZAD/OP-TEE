@@ -64,15 +64,6 @@ make run 或 make run-only
 # make check
 # sudo make install
 # sudo ldconfig
-# /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.27' not found
-# wget --no-check-certificate https://mirrors.tuna.tsinghua.edu.cn/gnu/libc/glibc-2.27.tar.gz
-# sudo apt-get install gawk -y
-# cd glibc-2.27
-# mkdir build
-# cd build
-# ../configure --prefix=/opt/glibc-2.27
-# make
-# sudo make install
 # 运行后会进入QEMU模拟器并出现NW UART终端和SW UART终端
 # 在QEMU终端中输入命令c以启动安全世界和普通世界
 # 在安全世界中输入root登录Buildroot
