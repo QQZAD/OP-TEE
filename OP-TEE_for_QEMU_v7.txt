@@ -58,7 +58,7 @@ make flash
 cd ~/qemu-v7-project/build
 make run
 # 第二次启动时可以用make run-only
-# 移植到其他系统后也可以用make run-only，务必保证编译的系统版本和移植的系统版本一致
+# 移植到其他系统后也可以用make run-only，务必保证编译的系统版本和移植的系统版本一致(Ubuntu18.04)
 # 在移植的系统上运行遇到问题
 # error while loading shared libraries: libpng16.so.16: cannot open shared object file: No such file or directory
 # https://sourceforge.net/projects/libpng
